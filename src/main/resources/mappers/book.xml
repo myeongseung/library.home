@@ -89,9 +89,9 @@
         update book_mst
         set
             book_name = #{bookName},
-            <if test='author != null or author != ""'>author = #{author},</if>
-            <if test='publisher != null or publisher != ""'>publisher = #{publisher},</if>
-            <if test='publicationDate != null or publicationDate != ""'>publication_date = #{publicationDate},</if>
+            <if test='author != null and author != ""'>author = #{author},</if>
+            <if test='publisher != null and publisher != ""'>publisher = #{publisher},</if>
+            <if test='publicationDate != null' > publication_date = #{publicationDate},</if>
             category = #{category}
         where
             book_code = #{bookCode}
@@ -106,5 +106,45 @@
             book_mst
         where
             book_code = #{bookCode}
+    </delete>
+
+    <insert id="registerBookImages" parameterType="list">
+        insert into book_image
+        values
+            <foreach collection="list" item="file" separator=",">
+                (0, #{file.bookCode}, #{file.saveName}, #{file.originName})
+            </foreach>
+    </insert>
+    
+    <select id="findBookImagesAll" resultType="com.korit.library.web.dto.BookImageDto">
+        select
+            image_id as imageId,
+            book_code as bookCode,
+            save_name as saveName,
+            origin_name as originName
+        from
+            book_image
+        where
+            book_code = #{bookCode}
+    </select>
+
+    <select id="findBookImageByImageId" resultType="com.korit.library.web.dto.BookImageDto">
+        select
+            image_id as imageId,
+            book_code as bookCode,
+            save_name as saveName,
+            origin_name as originName
+        from
+         book_image
+        where
+            image_id = #{imageId}
+    </select>
+
+    <delete id="deleteBookImg">
+        delete
+        from
+            book_image
+        where
+            image_id = #{imageId}
     </delete>
 </mapper>

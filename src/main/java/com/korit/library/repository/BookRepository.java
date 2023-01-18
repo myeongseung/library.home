@@ -1,9 +1,6 @@
 package com.korit.library.repository;
 
-import com.korit.library.web.dto.BookMstDto;
-import com.korit.library.web.dto.BookReqDto;
-import com.korit.library.web.dto.CategoryDto;
-import com.korit.library.web.dto.SearchReqDto;
+import com.korit.library.web.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.awt.print.Book;
@@ -38,4 +35,14 @@ public interface BookRepository {
     public int maintainUpdateBookByBookCode(BookReqDto bookReqDto);
 
     public int deleteBookByBookCode(BookReqDto bookReqDto);
+
+    public int registerBookImages(List<BookImageDto> bookImageDtos);
+
+    public List<BookImageDto> findBookImagesAll(String bookCode);
+
+    public BookImageDto findBookImageByImageId(int imageId);
+
+    public int deleteBookImg(int imgaeId);
+
+
 }

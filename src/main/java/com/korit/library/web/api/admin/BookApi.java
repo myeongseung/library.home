@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -68,6 +69,7 @@ public class BookApi {
     @PatchMapping("/book/{bookCode}")
     public ResponseEntity<CMRespDto<?>> patchmodifyBook(@PathVariable String bookCode, @Valid @RequestBody BookReqDto bookReqDto, BindingResult bindingResult){
         bookService.patchmodifyBook(bookReqDto);
+        System.out.println(bookReqDto.getPublicationDate());
         return ResponseEntity
                 .ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", true));
@@ -81,5 +83,29 @@ public class BookApi {
         return ResponseEntity
                 .ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(),"Successfully",true));
+    }
+
+    @ParamsAspect
+    @PostMapping("/book/{bookCode}/images")
+    public ResponseEntity<CMRespDto<?>> registerBookImage(@PathVariable String bookCode, @RequestPart List<MultipartFile> files){
+        bookService.registerBookImages(bookCode, files);
+
+        return ResponseEntity.ok().body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully",true));
+    }
+
+
+    @ParamsAspect
+    @GetMapping("/book/{bookCode}/images")
+    public ResponseEntity<CMRespDto<?>> getBooks(@PathVariable String bookCode){
+        List<BookImageDto> bookImageDtos = bookService.getBooks(bookCode);
+        return ResponseEntity
+                .ok()
+                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", bookImageDtos));
+    }
+
+    @DeleteMapping("/book/{bookCode}/images/{imageId}")
+    public ResponseEntity<CMRespDto<?>> removeBookImage(@PathVariable String bookCode,@PathVariable int imageId){
+        bookService.removeBookImage(imageId);
+        return ResponseEntity.ok().body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully",null));
     }
 }
