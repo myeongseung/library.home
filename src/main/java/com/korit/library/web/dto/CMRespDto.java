@@ -1,6 +1,5 @@
 package com.korit.library.web.dto;
 
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,4 +13,3 @@ public class CMRespDto<T> {
     private String message;
     private T data;
 }
-

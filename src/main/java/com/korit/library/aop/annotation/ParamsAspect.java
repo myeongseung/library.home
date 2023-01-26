@@ -6,5 +6,5 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE,ElementType.METHOD})
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface ParamsAspect {}

@@ -16,6 +16,7 @@ import java.util.Map;
 @Aspect
 @Component
 public class ParamsAop {
+
     @Pointcut("@annotation(com.korit.library.aop.annotation.ParamsAspect)")
     private void pointCut() {}
 
@@ -25,9 +26,10 @@ public class ParamsAop {
         Object[] args = proceedingJoinPoint.getArgs();
 
         for(Object arg : args) {
-            log.info("{}",arg);
+            log.info("{}", arg);
         }
 
         return proceedingJoinPoint.proceed();
     }
+
 }

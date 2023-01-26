@@ -1,4 +1,4 @@
-package com.korit.library.web.dto;
+package com.korit.library.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,14 +11,13 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Data
-public class UserDto {
+public class UserMst {
     @ApiModelProperty(hidden = true)
     private int userId;
-
 
     @NotBlank
     @ApiModelProperty(name = "username", value = "사용자이름", example = "abc", required = true)
@@ -33,7 +32,7 @@ public class UserDto {
     private String repassword;
 
     @NotBlank
-    @ApiModelProperty(name = "name", value = "성명", example = "권명승", required = true)
+    @ApiModelProperty(name = "name", value = "성명", example = "김준일", required = true)
     private String name;
 
     @NotBlank
@@ -41,13 +40,11 @@ public class UserDto {
     @ApiModelProperty(name = "email", value = "이메일", example = "abc@gmail.com", required = true)
     private String email;
 
-
     @ApiModelProperty(hidden = true)
     private LocalDateTime createDate;
-
     @ApiModelProperty(hidden = true)
     private LocalDateTime updateDate;
 
     @ApiModelProperty(hidden = true)
-    private List<RoleDtlDto> roleDtlDto;
+    private List<RoleDtl> roleDtl;
 }

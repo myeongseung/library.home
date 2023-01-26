@@ -8,7 +8,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
 
-import java.beans.BeanProperty;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +33,7 @@ public class ValidationAop {
 
         if(bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
+
             bindingResult.getFieldErrors().forEach(error -> {
                 errorMap.put(error.getField(), error.getDefaultMessage());
             });
@@ -43,4 +43,5 @@ public class ValidationAop {
 
         return proceedingJoinPoint.proceed();
     }
+
 }

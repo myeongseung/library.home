@@ -1,41 +1,36 @@
-/*
-    리셋 하는 용도로 사용할 css
-*/
-
 html, body, div, span, 
 h1, h2, h3, 
 p, pre, 
 a, b, i, 
-ol, ul, 
+ol, ul,
 form, label,
 table, tbody, tfoot, thead, tr, th, td,
 article, aside, footer, header, nav, main {
-    margin: 0px;
-    padding: 0px;
-    border: 0px;
+    margin: 0;
+    padding: 0;
+    border: 0;
     box-sizing: border-box;
 }
 
-html, body{
+html, body {
     line-height: 1;
     height: 100%;
-    
 }
 
-ol, ul{
+ol, ul {
     list-style-type: none;
 }
 
-a{
+a {
     color: black;
     text-decoration: none;
 }
 
-table{
+table {
     border-collapse: collapse;
     border-spacing: 0;
 }
 
-input, textarea, select{
+input, textarea, select {
     box-sizing: border-box;
 }

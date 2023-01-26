@@ -7,6 +7,6 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Getter
-public class CustomValidationException extends RuntimeException {
+public class CustomRentalException extends RuntimeException {
     private Map<String, String> errorMap;
 }

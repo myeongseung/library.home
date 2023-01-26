@@ -1,8 +1,8 @@
 package com.korit.library.security;
 
-import com.korit.library.web.dto.RoleDtlDto;
-import com.korit.library.web.dto.RoleMstDto;
-import com.korit.library.web.dto.UserDto;
+import com.korit.library.entity.RoleDtl;
+import com.korit.library.entity.RoleMst;
+import com.korit.library.entity.UserMst;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class PricipalDetails implements UserDetails {
 
     //커스텀으로 생성
     @Getter
-    private final UserDto user;
+    private final UserMst user;
     private Map<String, Object> response;
 
 
@@ -31,11 +31,11 @@ public class PricipalDetails implements UserDetails {
         ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
         //람다식을 이해하는 반복문
-        List<RoleDtlDto> roleDtlDtoList = user.getRoleDtlDto();
-        for(int i=0;i< roleDtlDtoList.size();i++){
-            RoleDtlDto dtl = roleDtlDtoList.get(i);
-            RoleMstDto roleMstDto = dtl.getRoleMstDto();
-            String roleName = roleMstDto.getRoleName();
+        List<RoleDtl> roleDtlList = user.getRoleDtl();
+        for(int i = 0; i< roleDtlList.size(); i++){
+            RoleDtl dtl = roleDtlList.get(i);
+            RoleMst roleMst = dtl.getRoleMst();
+            String roleName = roleMst.getRoleName();
 
             GrantedAuthority role = new GrantedAuthority() {
                 @Override

@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AccountController {
 
     @GetMapping("/login")
-    public String login(){
+    public String login() {
         return "account/login";
     }
 
-    @PostMapping("/login/error") //로그인에서 포스트요청해서
-    public String loginError(){
+    @PostMapping("/login/error")
+    public String loginError() {
         return "account/login_error";
     }
 
     @GetMapping("/register")
-    public String register(){
+    public String register() {
         return "account/register";
     }
 }

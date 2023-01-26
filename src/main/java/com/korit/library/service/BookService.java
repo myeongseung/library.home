@@ -1,12 +1,14 @@
 package com.korit.library.service;
 
+import com.korit.library.entity.BookImage;
+import com.korit.library.entity.BookMst;
+import com.korit.library.entity.CategoryView;
 import com.korit.library.exception.CustomValidationException;
 import com.korit.library.repository.BookRepository;
 import com.korit.library.web.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -19,28 +21,29 @@ import java.util.*;
 @Service
 public class BookService {
 
-    @Value("${file.path}") //yml에 등록해놓은 경로를 스프링 어노테이션 Value에 경로저장
-    private String filePath; //그럼 filePath가 경로를 가지고 있음.
+    @Value("${file.path}")
+    private String filePath;
+
     @Autowired
     private BookRepository bookRepository;
 
-    public List<BookMstDto> searchBook(SearchReqDto searchReqDto){
+    public List<BookMst> searchBook(SearchReqDto searchReqDto) {
         searchReqDto.setIndex();
         return bookRepository.searchBook(searchReqDto);
     }
 
-    public List<CategoryDto> getCategories(){
+    public List<CategoryView> getCategories() {
         return bookRepository.findAllCategory();
     }
 
-    public void registerBook(BookReqDto bookReqDto){
+    public void registerBook(BookReqDto bookReqDto) {
         duplicateBookCode(bookReqDto.getBookCode());
         bookRepository.saveBook(bookReqDto);
     }
 
-    private void duplicateBookCode(String bookCode){
-        BookMstDto bookMstDto = bookRepository.findBookByBookCode(bookCode);
-        if(bookMstDto != null){
+    private void duplicateBookCode(String bookCode) {
+        BookMst bookMst = bookRepository.findBookByBookCode(bookCode);
+        if(bookMst != null) {
             Map<String, String> errorMap = new HashMap<>();
             errorMap.put("bookCode", "이미 존재하는 도서코드입니다.");
 
@@ -48,75 +51,87 @@ public class BookService {
         }
     }
 
-    public void modifyBook(BookReqDto bookReqDto){
+    public void modifyBook(BookReqDto bookReqDto) {
         bookRepository.updateBookByBookCode(bookReqDto);
     }
 
-    public void patchmodifyBook(BookReqDto bookReqDto){
+    public void maintainModifyBook(BookReqDto bookReqDto) {
         bookRepository.maintainUpdateBookByBookCode(bookReqDto);
     }
 
-    public void deleteBook(BookReqDto bookReqDto){
-        bookRepository.deleteBookByBookCode(bookReqDto);
+    public void removeBook(String bookCode) {
+        bookRepository.deleteBook(bookCode);
     }
 
-    public void registerBookImages(String bookCode, List<MultipartFile> files){
-        if(files.size() < 1){
+    public void registerBookImages(String bookCode, List<MultipartFile> files) {
+        if(files.size() < 1) {
             Map<String, String> errorMap = new HashMap<String, String>();
-            errorMap.put("files","이미지를 선택하세요.");
+            errorMap.put("files", "이미지를 선택하세요.");
 
             throw new CustomValidationException(errorMap);
         }
 
-        List<BookImageDto> bookImageDtos = new ArrayList<BookImageDto>(); //이미지들을 리스트로 저장
+        List<BookImage> bookImages = new ArrayList<BookImage>();
 
         files.forEach(file -> {
-            String originFileName = file.getOriginalFilename(); //원래의 이름명
-            String extention = originFileName.substring(originFileName.lastIndexOf("."));//뒤에 확장자명 png
-            String tempFileName = UUID.randomUUID().toString().replaceAll("-","") + extention; //우리가 변형시킬 saveName
+            String originFileName = file.getOriginalFilename();
+            String extension = originFileName.substring(originFileName.lastIndexOf("."));
+            String tempFileName = UUID.randomUUID().toString().replaceAll("-", "") + extension;
 
             Path uploadPath = Paths.get(filePath + "book/" + tempFileName);
-            File f = new File(filePath+"book");
 
-            if(!f.exists()){
-                f.mkdir();
+            File f = new File(filePath + "book");
+            if(!f.exists()) {
+                f.mkdirs();
             }
+
             try {
                 Files.write(uploadPath, file.getBytes());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
-            BookImageDto bookImageDto = new BookImageDto().builder()
+            BookImage bookImage = BookImage.builder()
                     .bookCode(bookCode)
                     .saveName(tempFileName)
                     .originName(originFileName)
                     .build();
 
-            bookImageDtos.add(bookImageDto); //리스트에 넣고
+            bookImages.add(bookImage);
         });
-        bookRepository.registerBookImages(bookImageDtos); //리스트에 담긴 정보를 데이터 베이스에 넣는다.
+
+        bookRepository.registerBookImages(bookImages);
     }
 
-    public List<BookImageDto> getBooks(String bookCode){
-        return bookRepository.findBookImagesAll(bookCode);
+    public List<BookImage> getBooks(String bookCode) {
+        return bookRepository.findBookImageAll(bookCode);
     }
 
-    public void removeBookImage(int imageId){
-        BookImageDto bookImageDto = bookRepository.findBookImageByImageId(imageId);
-        if(bookImageDto == null){
+    public void removeBookImage(int imageId) {
+        BookImage bookImage = bookRepository.findBookImageByImageId(imageId);
+
+        if(bookImage == null) {
             Map<String, String> errorMap = new HashMap<>();
-            errorMap.put("error!","존재하지 않는 이미지 ID입니다.");
+            errorMap.put("error", "존재하지 않는 이미지 ID입니다.");
 
             throw new CustomValidationException(errorMap);
         }
 
-        if(bookRepository.deleteBookImg(imageId) > 0){
-            File file = new File(filePath + "book/" + bookImageDto.getSaveName());
-            if(file.exists()){
+        if(bookRepository.deleteBookImage(imageId) > 0) {
+            File file = new File(filePath + "book/" + bookImage.getSaveName());
+            if(file.exists()) {
                 file.delete();
             }
         }
     }
 }
+
+
+
+
+
+
+
+
+
 
