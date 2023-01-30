@@ -39,6 +39,8 @@ public interface BookRepository {
 
     public int deleteBook(String bookCode);
 
+    public int deleteBooks(List<Integer> userIds);
+
     public int registerBookImages(List<BookImage> bookImages);
 
     public List<BookImage> findBookImageAll(String bookCode);
