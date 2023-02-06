@@ -38,13 +38,13 @@ public interface BookRepository {
     public int maintainUpdateBookByBookCode(BookReqDto bookReqDto);
 
     public int deleteBook(String bookCode);
-
     public int deleteBooks(List<Integer> userIds);
 
     public int registerBookImages(List<BookImage> bookImages);
 
     public List<BookImage> findBookImageAll(String bookCode);
     public BookImage findBookImageByImageId(int imageId);
+    public BookImage findBookImageByBookCode(String bookCode);
 
     public int deleteBookImage(int imageId);
 }

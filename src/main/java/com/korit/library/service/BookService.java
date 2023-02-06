@@ -27,7 +27,15 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    public int getBookTotalCount(SearchNumberListReqDto searchNumberListReqDto){
+    public Map<String, Object> getBookAndImage(String bookCode) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("bookMst", bookRepository.findBookByBookCode(bookCode));
+        result.put("bookImage", bookRepository.findBookImageByBookCode(bookCode));
+
+        return result;
+    }
+
+    public int getBookTotalCount(SearchNumberListReqDto searchNumberListReqDto) {
         return bookRepository.getBookTotalCount(searchNumberListReqDto);
     }
 
@@ -69,7 +77,7 @@ public class BookService {
     }
 
     public void removeBooks(DeleteBooksReqDto deleteBooksReqDto) {
-        bookRepository.deleteBooks(deleteBooksReqDto.getBookIds());
+        bookRepository.deleteBooks(deleteBooksReqDto.getUserIds());
     }
 
     public void registerBookImages(String bookCode, List<MultipartFile> files) {
